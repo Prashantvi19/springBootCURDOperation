@@ -52,7 +52,7 @@ public class WebControllers {
 		return views;
 	}
 
-// List Return 
+// List Return
 
 	@GetMapping("/datalist")
 	public String dataListPage(Model model) {
@@ -72,7 +72,7 @@ public class WebControllers {
 		return "list";
 	}
 
-//	Update Page return with a single data and get Id 
+//	Update Page return with a single data and get Id
 
 	@GetMapping("/updateById")
 	public String updateByIdPage(@RequestParam("id") int id, Model model, RedirectAttributes redirectAttributes) {

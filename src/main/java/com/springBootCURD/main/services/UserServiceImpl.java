@@ -38,11 +38,11 @@ public class UserServiceImpl implements UserService {
 
 		System.out.println(userData.getEmail() + userData.getMobile() + userData.getName());
 		try {
-			return curdRepo.save(userData);			 
+			return curdRepo.save(userData);
 
 //			return true;
 		} catch (Exception e) {
-			
+
 			e.printStackTrace();
 			return null;
 		}
@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
 			}
 
 		} catch (Exception e) {
-			
+
 			e.printStackTrace();
 		}
 		return status;
@@ -81,7 +81,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<UserEntity> getUserByEmail(String email) {
 		try {
-			
+
 			userList =curdRepo.findByEmail(email);
 			return userList != null ? userList : new ArrayList<>();
 		} catch (Exception e) {
@@ -96,7 +96,7 @@ public class UserServiceImpl implements UserService {
 	public List<UserEntity> userList() {
 		try  {
 
-			
+
 			userList = curdRepo.findAll();
 
 			return userList != null ? userList : new ArrayList<>();

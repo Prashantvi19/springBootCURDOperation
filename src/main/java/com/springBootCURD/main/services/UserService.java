@@ -17,6 +17,6 @@ public interface UserService {
 	public List<UserEntity> getUserByEmail(String id);
 
 	public boolean deleteUser(int id);
-	
-	
+
+
 }

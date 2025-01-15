@@ -8,6 +8,6 @@ import com.springBootCURD.main.entities.UserEntity;
 
 public interface CurdRepo extends JpaRepository<UserEntity,Integer>{
 
-	
+
 	List<UserEntity> findByEmail(String email);
 }

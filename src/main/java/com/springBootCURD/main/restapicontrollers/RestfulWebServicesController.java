@@ -1,9 +1,12 @@
 package com.springBootCURD.main.restapicontrollers;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.springBootCURD.main.entities.UserEntity;
 import com.springBootCURD.main.services.UserService;
+
 @RestController
 public class RestfulWebServicesController {
 	@Autowired
@@ -58,51 +62,70 @@ public class RestfulWebServicesController {
 	}
 
 	@PostMapping("/submitForm")
-	public UserEntity submitFormData(@RequestBody UserEntity userEntity) {
-
-//	    userEntity = userServices.insertUser(userEntity);
-	    
-	    return userServices.insertUser(userEntity);
-//		if (userEntity != null) {
-//			return "Form submitted successfully" + "String :";
-//		} else {
-//			return "Somthing went wrong" + "String :";
-//		}
-	}
-
-	@PutMapping("/updatedata")
-	public String updateData(@RequestBody UserEntity userEntity) {
-
-		boolean status = false;
+	public ResponseEntity<UserEntity> submitFormData(@RequestBody UserEntity userEntity) {
 
 		if (userEntity != null) {
-			
-			userEntity = userServices.updateUser(userEntity);
+
+			userEntity = userServices.insertUser(userEntity);
 		}
 
 		if (userEntity != null) {
 
-			return "Form Updatted successfully" + "String :" + status;
+			return ResponseEntity.status(HttpStatus.CREATED).header("Form submitted successfully", "Thanks!")
+					.body(userEntity);
+
 		} else {
-			return "Something went wrong. Unable to find record." + status;
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.header("Something went wrong. Unable to submit record.", "Thanks!").body(userEntity);
+		}
+		}
+
+	@PutMapping("/updatedata")
+	public ResponseEntity<UserEntity> updateData(@RequestBody UserEntity userEntity) {
+
+		if (userEntity != null) {
+
+			userEntity = userServices.updateUser(userEntity);
+
+		}
+
+		if (userEntity != null) {
+
+			return ResponseEntity.status(HttpStatus.OK).header("Form Updatted successfull", "Thanks!").body(userEntity);
+
+		} else {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.header("Something went wrong. Unable to find record.", "Thanks!").body(userEntity);
 
 		}
 	}
 
 	@DeleteMapping("/deletedata")
-	public String deleteData(@RequestParam int id) {
+	public ResponseEntity<UserEntity> deleteData(@RequestParam int id) {
 		System.out.println(id);
+		Optional<UserEntity> userEntitiesOptinal;
+		UserEntity userEntity = null;
+		if (id >= 0) {
+			userEntitiesOptinal = userServices.getUserById(id);
+			if (userEntitiesOptinal.isPresent()) {
+				userEntity = userEntitiesOptinal.orElse(new UserEntity());
+			}
+			boolean status = false;
+			if (id >= 0) {
+				status = userServices.deleteUser(id);
+			}
 
-		boolean status = false;
-		if (id != 0) {
-			status = userServices.deleteUser(id);
-		}
+			if (status && userEntity != null) {
 
-		if (status) {
-			return "Record successfully deleted.";
-		} else {
-			return "Something went wrong. Unable to delete record.";
-		}
+				return ResponseEntity.status(HttpStatus.OK).header("Record successfully deleted.", "Thanks!")
+						.body(userEntity);
 
+			}
+
+		} 
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.header("Something went wrong. Unable to delete record.", "Thanks!").body(userEntity);
+
+		
 	}
 }
